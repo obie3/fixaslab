@@ -59,7 +59,7 @@ Params
 
 | Key                                | Value         | 
 | -----------------------------------|:-------------:|
-| account_type_id                    | saving        |
+| account_type_id                    | 1             |
 | account_balance                    | 1000000       |
 | user_id                            | 1
 
