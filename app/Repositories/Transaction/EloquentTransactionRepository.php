@@ -36,7 +36,6 @@ class EloquentTransactionRepository implements TransactionContract {
         }
     }
 
-
     public function all(){
         return Transaction::with(['customer_profile'])
         ->orderBy('created_at', 'Desc')
@@ -45,7 +44,15 @@ class EloquentTransactionRepository implements TransactionContract {
 
     public function getAccountDetails($account_number) {
         return AccountDetail::with(['customer_profile', 'account_type'])
-        ->where('account_number', $account_number)->first();
+        ->where('account_number', $account_number)
+        ->first();
+    }
+
+    public function findByAccountNumber($account_number){
+        return Transaction::with(['customer_profile'])
+        ->where('account_number', $account_number)
+        ->orderBy('created_at', 'Desc')
+        ->get();
     }
 
     public function compute($transaction_type, $amount, $current_balance, $min_balance, $account_balance ) {
@@ -64,7 +71,6 @@ class EloquentTransactionRepository implements TransactionContract {
         }
     }
 
-
     private function setTransactionProperties($transaction, $request) {
         // Assign attributes to the customerprofile here
         $profile = CustomerProfile::find($request->user_id);
@@ -72,6 +78,7 @@ class EloquentTransactionRepository implements TransactionContract {
         $transaction->amount = $request->amount;
         $transaction->customer_profile_id = $request->user_id;
         $transaction->customer_profile = $profile->name;
+        $transaction->account_number = $request->account_number;
 
     }
 

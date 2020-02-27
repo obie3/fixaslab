@@ -30,4 +30,6 @@ Route::group(['prefix' => 'account'], function () {
   Route::group(['prefix' => 'transactions'], function () {
     Route::get('/all', 'TransactionController@index');
     Route::post('/create', 'TransactionController@store');
+    Route::get('/customer/{account_number}', 'TransactionController@filterByAccount');
+
   });

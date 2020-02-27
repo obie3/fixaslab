@@ -18,13 +18,11 @@ class AccountDetailController extends Controller
         $message = ''; $statusCode = '';
         if(sizeof($data) > 0) {
             $message = ['success' => 'Records returned', 'data' => $data];
-            $statusCode = '200';
         }
         else {
-            $message = ['info' => 'No Record Found'];
-            $statusCode = '204';
+            $message = ['info' => 'No record found', 'data' => $data];
         }
-        return response()->json($message, $statusCode);
+        return response()->json($message, 200);
     }
 
     public function store(Request $request) {
@@ -37,7 +35,8 @@ class AccountDetailController extends Controller
             ]);
 
             if($validator->fails()) {
-                $message = ['error' => 'Missing Field Found', 'fields' => $validator->errors()];
+                $res = $validator->errors()->first();
+                $message = ['error' => 'Missing field found', 'message' => $res];
                 return response()->json($message, 400);
             }
 
@@ -47,7 +46,7 @@ class AccountDetailController extends Controller
                 return response()->json($message, 201);
             }
 
-            $message = ['error' => $req];
+            $message = ['error' => 'something went wrong', 'message' => $req];
             return response()->json($message, 400);
         }
         catch(Exception $ex) {

@@ -17,6 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->bigIncrements('id');
             $table->string('transaction_type');
             $table->string('customer_profile');
+            $table->string('account_number');
             $table->double('amount', 12, 2);
             $table->unsignedBigInteger('customer_profile_id');
             $table->foreign('customer_profile_id')->references('id')->on('customer_profiles');

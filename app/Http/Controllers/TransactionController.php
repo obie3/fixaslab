@@ -16,16 +16,14 @@ class TransactionController extends Controller
 
     public function index() {
         $data = $this->transactionModel->all();
-        $message = ''; $statusCode = '';
+        $message = '';
         if(sizeof($data) > 0) {
             $message = ['success' => 'Records returned', 'data' => $data];
-            $statusCode = '200';
         }
         else {
-            $message = ['info' => 'No Record Found'];
-            $statusCode = '204';
+            $message = ['info' => 'No record found', 'data' => $data];
         }
-        return response()->json($message, $statusCode);
+        return response()->json($message, 200);
     }
 
     public function store(Request $request) {
@@ -38,7 +36,8 @@ class TransactionController extends Controller
             ]);
 
             if($validator->fails()) {
-                $message = ['error' => 'Missing field found', 'fields' => $validator->errors()];
+                $res = $validator->errors()->first();
+                $message = ['error' => 'Missing field found', 'message' => $res ];
                 return response()->json($message, 400);
             }
             $req = $this->transactionModel->create($request);
@@ -59,6 +58,28 @@ class TransactionController extends Controller
             $message = ['error' => $ex];
             return response()->json($message, 500);
         }
+    }
+
+    public function filterByAccount($account_number) {
+        $data = $request->json()->all();
+            $validator =  Validator::make($data, [
+                'account_number' => 'required|numeric',
+            ]);
+
+            if($validator->fails()) {
+                $res = $validator->errors()->first();
+                $message = ['error' => 'Invalid data', 'message' => $res ];
+                return response()->json($message, 400);
+            }
+        $data = $this->transactionModel->findByAccountNumber($account_number);
+        $message = '';
+        if(sizeof($data) > 0) {
+            $message = ['success' => 'Records returned', 'data' => $data];
+        }
+        else {
+            $message = ['info' => 'No record found', 'data' => $data];
+        }
+        return response()->json($message, 200);
     }
 
     public function edit() {
