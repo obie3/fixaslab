@@ -61,16 +61,16 @@ class TransactionController extends Controller
     }
 
     public function filterByAccount($account_number) {
-        $data = $request->json()->all();
-            $validator =  Validator::make($data, [
-                'account_number' => 'required|numeric',
-            ]);
+        // $data = $account_number;
+        //     $validator =  Validator::make($data, [
+        //         'account_number' => 'required|numeric',
+        //     ]);
 
-            if($validator->fails()) {
-                $res = $validator->errors()->first();
-                $message = ['error' => 'Invalid data', 'message' => $res ];
-                return response()->json($message, 400);
-            }
+        //     if($validator->fails()) {
+        //         $res = $validator->errors()->first();
+        //         $message = ['error' => 'Invalid data', 'message' => $res ];
+        //         return response()->json($message, 400);
+        //     }
         $data = $this->transactionModel->findByAccountNumber($account_number);
         $message = '';
         if(sizeof($data) > 0) {
